@@ -1,7 +1,7 @@
 var playDeck = [];
 var i, j, k, l;
 var suits = ['D', 'C', 'H', 'S'];
-var cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+var cards = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
 var deck = document.getElementById('deck')
 var player = true;
 var board = [];
@@ -93,7 +93,8 @@ var boardFlop = function () {
     }
     //flopCards();
     //checkStraight();
-    checkFlush();
+    //checkFlush();
+    //checkCount();
 }
 // need to read card values now asdasufasdjasd
 
@@ -147,8 +148,6 @@ startGame = addEventListener('click', createDeck);
 //4 of a kind ===> count = 6
 
 //full house ===> count = 4
-
-//flush ===> class count >= 5
 
 //straight ===> get values out; arrange in ascending; check if (value[x]+1) === value [x+1] straight++; if straight++ >=5;
 
@@ -278,3 +277,70 @@ var checkFlush = function(){
         }
     }
 }
+
+var checkCount = function(){
+    var card1 = player1[0].split('-');
+    var card2 = player1[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var countDuplicates = {};
+    var pair = 0;
+    var threeKind = 0;
+    var pairValue = [];
+    var player1Hand = [card1[0],card2[0],card3[0],card4[0],card5[0],card6[0],card7[0]];
+    player1Hand.sort(function (a, b) {return (a - b)});
+    console.log(player1Hand)
+    for( i = 0; i < player1Hand.length; i++){
+        if(countDuplicates[player1Hand[i]] > 0){
+            countDuplicates[player1Hand[i]]++;
+        }
+        else{
+            countDuplicates[player1Hand[i]] = 1;
+        }
+    }
+    console.log(countDuplicates)
+    for( j = 0; j < cards.length; j++){
+        if (countDuplicates[cards[j]] == 4){
+            console.log(cards[j])
+            console.log(countDuplicates[cards[j]])
+            player1Result = fourKind + parseInt(cards[j])
+            return console.log(player1Result)
+        }
+        else if (countDuplicates[cards[j]] == 3){
+            console.log(cards[j])
+            console.log(countDuplicates[cards[j]])
+            threeKind++;
+            console.log(threeKind + '==== number of triples')
+            player1Result = triple + parseInt(cards[j])
+            return console.log(player1Result)
+        }
+        else if(countDuplicates[cards[j]] == 2){
+            console.log(cards[j])
+            console.log(countDuplicates[cards[j]])
+            pairValue.push(parseInt(cards[j]))
+            pair++;
+        }
+        else if (pair >= 2){
+            pairValue.sort(function (a, b) {return (a - b)});
+            var highPair = pairValue[pairValue.length-1];
+            var lowPair = pairValue[pairValue.length-2];
+            console.log( highPair + ' =====> high pair ')
+            console.log( lowPair + '====> low pair')
+            player1Result = highPair + twoPair
+            return console.log(player1Result)
+        }
+        else if (pair == 1){
+            player1Result = pairValue[0] + onePair
+            return console.log(player1Result)
+        }
+        else {
+            console.log(high + '==== user got high only')
+            player1Result = high + parseInt(player1Hand[6])
+            console.log(player1Result)
+        }
+    }return player1Result;
+}
+
