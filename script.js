@@ -135,8 +135,9 @@ var dealCards = function () {
     console.log(board + ' ===== board cards')
     if(board.length === 5){
         dealButton = document.getElementById('deal');
+        dealButton.disabled = true;
         dealButton.style.display = 'none';
-        setTimeout(checkWin,5000);
+        setTimeout(checkWin,3000);
     }
 }
 
@@ -147,7 +148,7 @@ var dealCards = function () {
 //     header.appendChild(dealCard);
 //     dealCard = addEventListener('click', dealCards);
 var startGame = document.getElementById('start');
-startGame = addEventListener('click', createDeck);
+startGame.addEventListener('click', createDeck);
 
 var checkStraight = function () {
     var card1 = player[0].split('-');
@@ -395,7 +396,6 @@ var checkStraightFlush = function(){
     //then check for flush.
 
 var checkWin = function(){
-    debugger;
     player = player1;
     checkStraightFlush();
     player1Result = playerResult
@@ -449,5 +449,9 @@ var checkWin = function(){
     else if (player2Result > player1Result){
         console.log('Player 2 wins!')
         alert('Player 2 wins!')
+    }
+    else{
+        console.log('Its a tie!')
+        alert('Its a tie!')
     }
 }
