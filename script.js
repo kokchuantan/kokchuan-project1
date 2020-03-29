@@ -3,10 +3,10 @@ var i, j, k, l;
 var suits = ['D', 'C', 'H', 'S'];
 var cards = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
 var deck = document.getElementById('deck')
-var player = true;
 var board = [];
 var player1 = [];
 var player2 = [];
+var player = [];
 var straightFlush = 105;
 var fourKind = 92;
 var fullHouse = 79;
@@ -16,56 +16,43 @@ var triple = 40;
 var twoPair = 27;
 var onePair = 14;
 var high = 1;
-var isStraight = 0;
-var player1Result, player2Result;
+var playerResult, player1Result, player2Result;
+var winner;
 
-var startGame = document.createElement("button");
-startGame.id = 'start-game';
-startGame.innerText = 'Begin';
-startGame.class = 'btn btn-primary'
-var header = document.getElementById('body')
-header.appendChild(startGame);
+// var startGame = document.createElement("button");
+// startGame.id = 'start-game';
+// startGame.type = 'submit';
+// startGame.innerText = 'Begin';
+// startGame.class = 'btn btn-primary'
+// var header = document.getElementById('body')
+// header.appendChild(startGame);
 
 var createDeck = function () {
-    startGame = document.getElementById('start-game')
-    //startGame.removeEventListener('click',createDeck)
-    startGame.style.display = 'none';
+    header = document.getElementById('body')
+    header.style.display = 'none';
+    var startGame = document.getElementById('start')
+    startGame.disabled = true
 
     //diamond suit
     for (i = 0; i < cards.length; i++) {
-        var deckCards = document.createElement("div");
-        deckCards.id = `${i+1}-D`;
-        deckCards.className = 'D';
-        // var image = document.createElement('img')
-        // image.src = `images/${i+1}-D.png`
-        deck.appendChild(deckCards);
-        //deckCards.appendChild(image);
-        playDeck.push(deckCards.id)
+        var deckCards =  `${i+1}-D`;
+        playDeck.push(deckCards)
 
     }
     //clubs suit
     for (j = 0; j < cards.length; j++) {
-        var deckCards = document.createElement("div");
-        deckCards.id = `${j+1}-C`;
-        deckCards.className = 'C';
-        deck.appendChild(deckCards);
-        playDeck.push(deckCards.id)
+        var deckCards = `${j+1}-C`;
+        playDeck.push(deckCards)
     }
     //hearts suit
     for (k = 0; k < cards.length; k++) {
-        var deckCards = document.createElement("div");
-        deckCards.id = `${k+1}-H`;
-        deckCards.className = 'H';
-        deck.appendChild(deckCards);
-        playDeck.push(deckCards.id)
+        var deckCards = `${k+1}-H`;
+        playDeck.push(deckCards)
     }
     //spades suit
     for (l = 0; l < cards.length; l++) {
-        var deckCards = document.createElement("div");
-        deckCards.id = `${l+1}-S`;
-        deckCards.className = 'S';
-        deck.appendChild(deckCards);
-        playDeck.push(deckCards.id)
+        var deckCards = `${l+1}-S`;
+        playDeck.push(deckCards)
     }
     console.log(playDeck)
     boardFlop();
@@ -85,51 +72,72 @@ var boardFlop = function () {
         player2.push(dealtCard[0]);
         console.log(player2 + ' ===== player 2 cards')
     }
-    while (board.length < 5) {
+    while (board.length < 3) {
         var random = (Math.floor(Math.random() * playDeck.length)) - 1;
         var dealtCard = playDeck.splice(random, 1);
         board.push(dealtCard[0]);
         console.log(board + ' ==== board cards')
     }
-    //flopCards();
-    //checkStraight();
-    //checkFlush();
-    checkCount();
+    printCards();
 }
-// need to read card values now asdasufasdjasd
 
 var printCards = function () {
-    // for (i = 0; i < player1.length; i++) {
-    //     var image = document.createElement('img');
-    //     image.src = `images/${player1[i]}.png`;
-    //     document.body.appendChild(image);
-    // }
-    // for (i = 0; i < player2.length; i++) {
-    //     var image = document.createElement('img');
-    //     image.src = `images/${player2[i]}.png`;
-    //     document.body.appendChild(image);
-    // }
-    // for (i = 0; i < board.length; i++) {
-    //     var image = document.createElement('img');
-    //     image.src = `images/${board[i]}.png`;
-    //     document.body.appendChild(image);
-    // }
+    var boardText = document.getElementById('board')
+    var player1Text = document.getElementById('player1')
+    var player2Text = document.getElementById('player2')
+    boardText.style = 'color : white; font-size:50px;';
+    player1Text.style = 'color : white; font-size:50px;';
+    player2Text.style = 'color : white; font-size:50px;';
+    boardText.innerText= 'Board : '
+    player1Text.innerText= 'Player 1 : '
+    player2Text.innerText= 'Player 2 : '
+    var dealButton = document.createElement('button')
+    dealButton.className = 'btn';
+    dealButton.className = 'btn-primary';
+    dealButton.type = 'submit';
+    dealButton.id = 'deal';
+    dealButton.innerText = 'Deal Cards';
+    var printDeal = document.getElementById('players');
+    printDeal.appendChild(dealButton);
+    dealButton.addEventListener('click',dealCards)
+    for (i = 0; i < board.length; i++) {
+        var image = document.createElement('img');
+        image.src = `images/${board[i]}.png`;
+        image.className = "col-md-2"
+        var printBoard = document.getElementById('board')
+        printBoard.appendChild(image);
+    }
+    for (i = 0; i < player1.length; i++) {
+        var image = document.createElement('img');
+        image.src = `images/${player1[i]}.png`;
+        image.className = "col-md-3"
+        var printPlayer1 = document.getElementById('player1')
+        printPlayer1.appendChild(image);
+    }
+    for (i = 0; i < player2.length; i++) {
+        var image = document.createElement('img');
+        image.src = `images/${player2[i]}.png`;
+        image.className = "col-md-3"
+        var printPlayer2 = document.getElementById('player2')
+        printPlayer2.appendChild(image);
+    }
 }
 
 var dealCards = function () {
-    //alternate player turns
-    if (player) {
-        player = false;
-    } else if (!player) {
-        player = true;
-    }
     var random = (Math.floor(Math.random() * playDeck.length)) - 1;
     var dealtCard = playDeck.splice(random, 1);
     var image = document.createElement('img');
     image.src = `images/${dealtCard}.png`;
-    document.body.appendChild(image);
-    board.push(dealtCard);
+    image.className = "col-sm-2"
+    var printBoard = document.getElementById('board')
+    printBoard.appendChild(image);
+    board.push(dealtCard[0]);
     console.log(board + ' ===== board cards')
+    if(board.length === 5){
+        dealButton = document.getElementById('deal');
+        dealButton.style.display = 'none';
+        setTimeout(checkWin,5000);
+    }
 }
 
 // var dealCard = document.createElement("button");
@@ -138,137 +146,99 @@ var dealCards = function () {
 //     dealCard.class = 'btn btn-primary'
 //     header.appendChild(dealCard);
 //     dealCard = addEventListener('click', dealCards);
-
+var startGame = document.getElementById('start');
 startGame = addEventListener('click', createDeck);
 
-//win conditions nightmare nightmare
-
-//straight flush
-
-//full house ===> count = 4
-
-// var card3 = player2[0].split('-');
-// var card4 = player2[1].split('-');
-
 var checkStraight = function () {
-    var card1 = player1[0].split('-');
-    var card2 = player1[1].split('-');
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
     var card3 = board[0].split('-');
     var card4 = board[1].split('-');
     var card5 = board[2].split('-');
     var card6 = board[3].split('-');
     var card7 = board[4].split('-');
-    var player1Hand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    var isStraight = 0;
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
     var sortDuplicate = {};
-    var sortedPlayer1Hand = [];
-    player1Hand.sort(function (a, b) {return (a - b)});
-    console.log(player1Hand + 'with dupes')
+    var sortedPlayerHand = [];
+    playerHand.sort(function (a, b) {return (a - b)});
+    console.log(playerHand + 'with dupes')
     // to remove duplicates
-    for( i = 0; i < player1Hand.length; i++){
-        if(sortDuplicate[player1Hand[i]] > 0){
-            sortDuplicate[player1Hand[i]]++;
+    for( i = 0; i < playerHand.length; i++){
+        if(sortDuplicate[playerHand[i]] > 0){
+            sortDuplicate[playerHand[i]]++;
         }
         else{
-            sortDuplicate[player1Hand[i]] = 1;
+            sortDuplicate[playerHand[i]] = 1;
         }
     }
     for( j = 1; j < 14; j++){
         if(parseInt(sortDuplicate[j])){
-            sortedPlayer1Hand.push(j);
+            sortedPlayerHand.push(j);
         }
     }
-    console.log(sortedPlayer1Hand + '==== without dupes')
-    for (k = 0; k < sortedPlayer1Hand.length; k++) {
-        // !!! need to check that straight is 5 consecutive and not split up
-        if ((sortedPlayer1Hand[k] + 1) === sortedPlayer1Hand[k + 1]) {
-            isStraight++;
-            console.log(isStraight)
+    console.log(sortedPlayerHand + '==== without dupes')
+    if(sortedPlayerHand >= 5){
+        for (k = 0; k < sortedPlayerHand.length; k++) {
+            // !!! need to check that straight is 5 consecutive and not split up
+            if ((sortedPlayerHand[k] + 1) === sortedPlayerHand[k + 1]) {
+                isStraight++;
+                console.log(isStraight)
+            }
+            else if (isStraight >= 4){
+                playerResult = straight + sortedPlayerHand[k]
+                console.log(playerResult)
+                console.log('result straight')
+                return playerResult;
+            }
+            // reset the count the moment it is not consecutive;
+            else{
+                playerResult=0;
+                isStraight = 0;
+            }
+            return playerResult;
         }
-        else if (isStraight >= 4){
-            player1Result = straight + sortedPlayer1Hand[k];
-            console.log(player1Result)
-            console.log('result straight')
-        }
-        // reset the count the moment it is not consecutive;
-        else{
-            isStraight = 0;
-        }       
     }
-    // isStraight = 0;
-    // var card8 = player2[0].split('-');
-    // var card9 = player2[1].split('-');
-    // var player2Hand = [parseInt(card8[0]), parseInt(card9[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    // sortDuplicate = {};
-    // var sortedPlayer2Hand = [];
-    // player2Hand.sort(function (a, b) {return (a - b)});
-    // console.log(player2Hand + 'with dupes')
-    // // to remove duplicates
-    // for( i = 0; i < player2Hand.length; i++){
-    //     if(sortDuplicate[player2Hand[i]] > 0){
-    //         sortDuplicate[player2Hand[i]]++;
-    //     }
-    //     else{
-    //         sortDuplicate[player2Hand[i]] = 1;
-    //     }
-    // }
-    // for( j = 1; j < 14; j++){
-    //     if(parseInt(sortDuplicate[j])){
-    //         sortedPlayer2Hand.push(j);
-    //     }
-    // }
-    // console.log(sortedPlayer2Hand + '==== without dupes')
-    // for (k = 0; k < sortedPlayer2Hand.length; k++) {
-    //     if ((sortedPlayer2Hand[k] + 1) === sortedPlayer2Hand[k + 1]) {
-    //         isStraight++;
-    //         console.log(isStraight)
-    //     }
-    //     else if (isStraight >= 4){
-    //         player2Result = straight + sortedPlayer2Hand[k];
-    //         console.log(player2Result)
-    //         console.log('result straight')
-    //     }
-    //     else{
-    //         isStraight = 0;
-    //     }       
-    // }
 }
 
 var checkFlush = function(){
-    var card1 = player1[0].split('-');
-    var card2 = player1[1].split('-');
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
     var card3 = board[0].split('-');
     var card4 = board[1].split('-');
     var card5 = board[2].split('-');
     var card6 = board[3].split('-');
     var card7 = board[4].split('-');
     var sortSuits = {};
-    var player1Hand = [card1[1],card2[1],card3[1],card4[1],card5[1],card6[1],card7[1]];
-    console.log(player1Hand)
-    for( i = 0; i < player1Hand.length; i++){
-        if(sortSuits[player1Hand[i]] > 0){
-            sortSuits[player1Hand[i]]++;
+    var playerHand = [card1[1],card2[1],card3[1],card4[1],card5[1],card6[1],card7[1]];
+    console.log(playerHand)
+    for( i = 0; i < playerHand.length; i++){
+        if(sortSuits[playerHand[i]] > 0){
+            sortSuits[playerHand[i]]++;
         }
         else{
-            sortSuits[player1Hand[i]] = 1;
+            sortSuits[playerHand[i]] = 1;
         }
     }
     for( j = 0; j < suits.length; j++){
         if(sortSuits[suits[j]] >= 5){
             console.log(suits[j])
             console.log(sortSuits[suits[j]])
-            player1Result = flush;
-            console.log(player1Result)
+            playerResult = flush;
+            console.log(playerResult)
+            return playerResult;
         }
         else {
             console.log(suits[j])
             console.log(sortSuits[suits[j]])
+            return playerResult = 0;
         }
     }
 }
 
 var checkCount = function(){
-    var card1 = player1[0].split('-');
-    var card2 = player1[1].split('-');
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
     var card3 = board[0].split('-');
     var card4 = board[1].split('-');
     var card5 = board[2].split('-');
@@ -281,15 +251,15 @@ var checkCount = function(){
     var pairValue = [];
     var tripleValue = [];
     var fourValue;
-    var player1Hand = [card1[0],card2[0],card3[0],card4[0],card5[0],card6[0],card7[0]];
-    player1Hand.sort(function (a, b) {return (a - b)});
-    console.log(player1Hand)
-    for( i = 0; i < player1Hand.length; i++){
-        if(countDuplicates[player1Hand[i]] > 0){
-            countDuplicates[player1Hand[i]]++;
+    var playerHand = [card1[0],card2[0],card3[0],card4[0],card5[0],card6[0],card7[0]];
+    playerHand.sort(function (a, b) {return (a - b)});
+    console.log(playerHand)
+    for( i = 0; i < playerHand.length; i++){
+        if(countDuplicates[playerHand[i]] > 0){
+            countDuplicates[playerHand[i]]++;
         }
         else{
-            countDuplicates[player1Hand[i]] = 1;
+            countDuplicates[playerHand[i]] = 1;
         }
     }
     console.log(countDuplicates)
@@ -314,18 +284,17 @@ var checkCount = function(){
         }
     }
     if(fourOfKind === 1){
-        player1Result = fourKind + fourValue
-        console.log(player1Result + '====> user got four of a kind')
-        return player1Result;
+        playerResult = fourKind + fourValue
+        console.log(playerResult + '====> user got four of a kind')
     }
     else if (threeKind >= 1 && pair >= 1){
         console.log('User got full house')
-        player1Result = fullHouse + tripleValue[tripleValue.length-1]
-        return console.log(player1Result + '===> player got full house')
+        playerResult = fullHouse + tripleValue[tripleValue.length-1]
+        return console.log(playerResult + '===> player got full house')
     }
     else if (threeKind === 1){
-        player1Result = triple + tripleValue[0]
-        return console.log(player1Result + '===> player got 1 triple')
+        playerResult = triple + tripleValue[0]
+        return console.log(playerResult + '===> player got 1 triple')
     }
     else if (pair >= 2){
         pairValue.sort(function (a, b) {return (a - b)});
@@ -333,16 +302,152 @@ var checkCount = function(){
         var lowPair = pairValue[pairValue.length-2];
         console.log( highPair + ' =====> high pair ')
         console.log( lowPair + '====> low pair')
-        player1Result = highPair + twoPair
-        return console.log(player1Result + '===> player got 2 pair')
+        playerResult = highPair + twoPair
+        return console.log(playerResult + '===> player got 2 pair')
     }
     else if (pair == 1){
-        player1Result = pairValue[0] + onePair
-        return console.log(player1Result + '===> player got 1 pair')
+        playerResult = pairValue[0] + onePair
+        return console.log(playerResult + '===> player got 1 pair')
     }
     else {
         console.log(high + '==== user got high only')
-        player1Result = high + parseInt(player1Hand[6])
-        return console.log(player1Result + '===> player got high caard')
+        playerResult = high + parseInt(playerHand[6])
+        return console.log(playerResult + '===> player got high caard')
+    }
+}
+
+var checkStraightFlush = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    var sortDuplicate = {};
+    var sortedPlayerHand = [];
+    var highcard;
+    var isStraight=0;
+    playerHand.sort(function (a, b) {return (a - b)});
+    console.log(playerHand + 'with dupes')
+    // to remove duplicates
+    for( i = 0; i < playerHand.length; i++){
+        if(sortDuplicate[playerHand[i]] > 0){
+            sortDuplicate[playerHand[i]]++;
+        }
+        else{
+            sortDuplicate[playerHand[i]] = 1;
+        }
+    }
+    for( j = 1; j < 14; j++){
+        if(parseInt(sortDuplicate[j])){
+            sortedPlayerHand.push(j);
+        }
+    }
+    console.log(sortedPlayerHand + '==== without dupes')
+    for (k = 0; k < sortedPlayerHand.length; k++) {
+        if ((sortedPlayerHand[k] + 1) === sortedPlayerHand[k + 1]) {
+            highcard = sortedPlayerHand[k+1]
+            isStraight++;
+            console.log(isStraight)
+        }
+        else if (isStraight >= 4){
+            playerResult = straight + highcard
+            console.log(playerResult)
+            console.log('result straight')
+        }
+        else{
+            playerResult =0;
+            isStraight = 0;
+        }
+    }
+    if(playerResult >=53){
+        var sortSuits = {};
+        var playerHand = [card1[1],card2[1],card3[1],card4[1],card5[1],card6[1],card7[1]];
+        console.log(playerHand)
+        for( i = 0; i < playerHand.length; i++){
+            if(sortSuits[playerHand[i]] > 0){
+                sortSuits[playerHand[i]]++;
+            }
+            else{
+                sortSuits[playerHand[i]] = 1;
+            }
+        }
+        for( j = 0; j < suits.length; j++){
+            if(sortSuits[suits[j]] >= 5){
+                console.log(suits[j])
+                console.log(sortSuits[suits[j]])
+                playerResult = flush;
+                console.log(playerResult)
+            }
+        }
+        if(playerResult == flush){
+            playerResult = straightFlush + highcard;
+            console.log(playerResult)
+        }
+    }
+    return playerResult;
+}
+    //check for straight first
+    //remove duplicates
+    //if straight true
+    //then check for flush.
+
+var checkWin = function(){
+    debugger;
+    player = player1;
+    checkStraightFlush();
+    player1Result = playerResult
+    if(player1Result < 105){
+        checkCount();
+        player1Result = playerResult
+        if(player1Result < 92){
+            checkCount();
+            player1Result = playerResult;
+            if(player1Result <79){
+                checkFlush();
+                player1Result = playerResult;
+                if(player1Result < 66){
+                    checkStraight();
+                    player1Result=playerResult;
+                    if(player1Result<53){
+                        checkCount();
+                        player1Result = playerResult;
+                    }
+                }
+            }
+        }
+    }
+    player = player2;
+    checkStraightFlush();
+    player2Result = playerResult;
+    if(player2Result < 105){
+        checkCount();
+        player2Result = playerResult
+        if(player2Result < 92){
+            checkCount();
+            player2Result = playerResult;
+            if(player2Result <79){
+                checkFlush();
+                player2Result = playerResult;
+                if(player2Result < 66){
+                    checkStraight();
+                    player2Result=playerResult;
+                    if(player2Result<53){
+                        checkCount();
+                        player2Result = playerResult;
+                    }
+                }
+            }
+        }
+    }
+    if(player1Result > player2Result){
+        console.log('Player 1 wins!')
+        alert('Player 1 wins!')
+    }
+    else if (player2Result > player1Result){
+        console.log('Player 2 wins!')
+        alert('Player 2 wins!')
     }
 }
