@@ -2,7 +2,6 @@ var playDeck = [];
 var i, j, k, l;
 var suits = ['D', 'C', 'H', 'S'];
 var cards = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13'];
-var deck = document.getElementById('deck')
 var board = [];
 var player1 = [];
 var player2 = [];
@@ -18,21 +17,87 @@ var onePair = 14;
 var high = 1;
 var playerResult, player1Result, player2Result;
 var winner;
+var betTotal = 0;
+var userChips = 1000000;
+var prizePool = 0;
+var flopPrinted = false;
 
-// var startGame = document.createElement("button");
-// startGame.id = 'start-game';
-// startGame.type = 'submit';
-// startGame.innerText = 'Begin';
-// startGame.class = 'btn btn-primary'
-// var header = document.getElementById('body')
-// header.appendChild(startGame);
+var inputHappened = function (currentInput){
+    console.log(currentInput)
+    var userInput = parseInt(currentInput);
+    if(isNaN(userInput)){
+        alert('Please enter valid amount!')
+    }
+    else{
+        if(!flopPrinted){
+            if(userInput< userChips){
+                betTotal += userInput;
+                printFlop();
+                flopPrinted = true;
+                prizePool = prizePool + (betTotal * 2)
+                userChips -= betTotal;
+                var userChipsLeft = document.getElementById('chips')
+                userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+                return userChips;
+            }
+            else{
+                alert('Not enough chips!')
+            }
+            
+        }
+        else{
+            if(userInput < userChips){
+                betTotal += userInput;
+                dealCards();
+                prizePool = prizePool + (betTotal * 2)
+                userChips -= betTotal;
+                var userChipsLeft = document.getElementById('chips')
+                userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+                return userChips;
+            }
+            else{
+                alert('Not enough chips!')
+            }
+        }
+    }
+}
+
+var nextGame = function(){
+    playDeck = [];
+    board = [];
+    player1 = [];
+    player2 = [];
+    player = [];
+    betTotal = 0;
+    prizePool = 0;
+    flopPrinted = false;
+    var clearBoard = document.getElementById('board')
+    clearBoard.innerText = '';
+    var clearPlayer1 = document.getElementById('player1')
+    clearPlayer1.innerText = '';
+    var clearPlayer2 = document.getElementById('player2')
+    clearPlayer2.innerText = '';
+    var nextHand = document.getElementById('nextHand')
+    nextHand.style.display = 'none';
+    createDeck();
+}
 
 var createDeck = function () {
     header = document.getElementById('body')
     header.style.display = 'none';
     var startGame = document.getElementById('start')
     startGame.disabled = true
-
+    var userBet = document.getElementById('input')
+    userBet.style.display = 'block';
+    var playerChips = document.getElementById('chips')
+    playerChips.style.display = 'block'
+    var dealButton = document.getElementById('check');
+    dealButton.disabled = false;
+    dealButton.style.display = 'block';
+    var foldButton = document.getElementById('fold');
+    foldButton.disabled = false;
+    foldButton.style.display = 'block';
+    
     //diamond suit
     for (i = 0; i < cards.length; i++) {
         var deckCards =  `${i+1}-D`;
@@ -55,11 +120,11 @@ var createDeck = function () {
         playDeck.push(deckCards)
     }
     console.log(playDeck)
-    boardFlop();
+    preFlop();
 }
 
 // deals both players 2 cards and sets up the flop;
-var boardFlop = function () {
+var preFlop = function () {
     while (player1.length < 2) {
         var random = (Math.floor(Math.random() * playDeck.length)) - 1;
         var dealtCard = playDeck.splice(random, 1);
@@ -71,12 +136,6 @@ var boardFlop = function () {
         var dealtCard = playDeck.splice(random, 1);
         player2.push(dealtCard[0]);
         console.log(player2 + ' ===== player 2 cards')
-    }
-    while (board.length < 3) {
-        var random = (Math.floor(Math.random() * playDeck.length)) - 1;
-        var dealtCard = playDeck.splice(random, 1);
-        board.push(dealtCard[0]);
-        console.log(board + ' ==== board cards')
     }
     printCards();
 }
@@ -91,24 +150,9 @@ var printCards = function () {
     boardText.innerText= 'Board : '
     player1Text.innerText= 'Player 1 : '
     player2Text.innerText= 'Player 2 : '
-    var dealButton = document.createElement('button')
-    dealButton.className = 'btn';
-    dealButton.className = 'btn-primary';
-    dealButton.type = 'submit';
-    dealButton.id = 'deal';
-    dealButton.innerText = 'Deal Cards';
-    var printDeal = document.getElementById('players');
-    printDeal.appendChild(dealButton);
-    dealButton.addEventListener('click',dealCards)
-    for (i = 0; i < board.length; i++) {
-        var image = document.createElement('img');
-        image.src = `images/${board[i]}.png`;
-        image.className = "col-md-2"
-        var printBoard = document.getElementById('board')
-        printBoard.appendChild(image);
-    }
     for (i = 0; i < player1.length; i++) {
         var image = document.createElement('img');
+        image.id = `image${i}`
         image.src = `images/${player1[i]}.png`;
         image.className = "col-md-3"
         var printPlayer1 = document.getElementById('player1')
@@ -116,39 +160,65 @@ var printCards = function () {
     }
     for (i = 0; i < player2.length; i++) {
         var image = document.createElement('img');
-        image.src = `images/${player2[i]}.png`;
+        image.id = `image2${i}`
+        //image.src = `images/${player2[i]}.png`;
+        image.src = `images/red_back.png`;
         image.className = "col-md-3"
         var printPlayer2 = document.getElementById('player2')
         printPlayer2.appendChild(image);
     }
 }
 
-var dealCards = function () {
-    var random = (Math.floor(Math.random() * playDeck.length)) - 1;
-    var dealtCard = playDeck.splice(random, 1);
-    var image = document.createElement('img');
-    image.src = `images/${dealtCard}.png`;
-    image.className = "col-sm-2"
-    var printBoard = document.getElementById('board')
-    printBoard.appendChild(image);
-    board.push(dealtCard[0]);
-    console.log(board + ' ===== board cards')
-    if(board.length === 5){
-        dealButton = document.getElementById('deal');
-        dealButton.disabled = true;
-        dealButton.style.display = 'none';
-        setTimeout(checkWin,3000);
+var printFlop = function(){
+    while (board.length < 3) {
+        var random = (Math.floor(Math.random() * playDeck.length)) - 1;
+        var dealtCard = playDeck.splice(random, 1);
+        board.push(dealtCard[0]);
+        console.log(board + ' ==== board cards')
+    }
+    for (i = 0; i < board.length; i++) {
+        var image = document.createElement('img');
+        image.src = `images/${board[i]}.png`;
+        image.className = "col-md-2"
+        var printBoard = document.getElementById('board')
+        printBoard.appendChild(image);
     }
 }
 
-// var dealCard = document.createElement("button");
-//     dealCard.id = 'deal-card';
-//     dealCard.innerText = 'Deal Card';
-//     dealCard.class = 'btn btn-primary'
-//     header.appendChild(dealCard);
-//     dealCard = addEventListener('click', dealCards);
-var startGame = document.getElementById('start');
-startGame.addEventListener('click', createDeck);
+var dealCards = function () {
+    if(!flopPrinted){
+        flopPrinted = true;
+        printFlop();
+    }
+    else{
+        var random = (Math.floor(Math.random() * playDeck.length)) - 1;
+        var dealtCard = playDeck.splice(random, 1);
+        var image = document.createElement('img');
+        image.src = `images/${dealtCard}.png`;
+        image.className = "col-sm-2"
+        var printBoard = document.getElementById('board')
+        printBoard.appendChild(image);
+        board.push(dealtCard[0]);
+        console.log(board + ' ===== board cards')
+        if(board.length === 5){
+            player2Card = document.getElementById('image20')
+            player2Card.src = `images/${player2[0]}.png`;
+            player2Card2 = document.getElementById('image21')
+            player2Card2.src = `images/${player2[1]}.png`;
+            dealButton = document.getElementById('check');
+            dealButton.disabled = true;
+            betInput = document.getElementById('input')
+            dealButton.style.display = 'none';
+            betInput.style.display = 'none';
+            foldButton = document.getElementById('check');
+            foldButton.disabled = true;
+            betInput = document.getElementById('input')
+            foldButton.style.display = 'none';
+            betInput.style.display = 'none';
+            setTimeout(checkWin,3000);
+        }
+    }
+}
 
 var checkStraight = function () {
     var card1 = player[0].split('-');
@@ -443,15 +513,92 @@ var checkWin = function(){
         }
     }
     if(player1Result > player2Result){
-        console.log('Player 1 wins!')
+        userChips += prizePool;
+        var userChipsLeft = document.getElementById('chips')
+        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+        var nextHand = document.getElementById('nextHand')
+        nextHand.style.display = 'block';
         alert('Player 1 wins!')
     }
     else if (player2Result > player1Result){
-        console.log('Player 2 wins!')
+        var nextHand = document.getElementById('nextHand')
+        nextHand.style.display = 'block';
         alert('Player 2 wins!')
     }
     else{
-        console.log('Its a tie!')
+        userChips = userChips + (prizePool/2)
+        var userChipsLeft = document.getElementById('chips')
+        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+        var nextHand = document.getElementById('nextHand')
+        nextHand.style.display = 'block';
         alert('Its a tie!')
     }
 }
+
+var fold = function(){
+    var nextHand = document.getElementById('nextHand')
+    nextHand.style.display = 'block';
+    dealButton = document.getElementById('check');
+    dealButton.disabled = true;
+    betInput = document.getElementById('input')
+    dealButton.style.display = 'none';
+    betInput.style.display = 'none';
+    foldButton = document.getElementById('fold');
+    foldButton.disabled = true;
+    betInput = document.getElementById('input')
+    foldButton.style.display = 'none';
+    betInput.style.display = 'none';
+    alert('Player 2 wins!')
+}
+
+var userBet = document.createElement('input')
+userBet.id = 'input';
+userBet.style.display = 'none'
+userBet.placeholder = 'Place your bets here.'
+var playerBet = document.getElementById('betAmount')
+playerBet.appendChild(userBet)
+var playerChips = document.createElement('h4')
+playerChips.class = 'col-sm-2'
+playerChips.id = 'chips'
+playerChips.style.color = 'white';
+playerChips.style.display = 'none';
+playerChips.innerText = `Total chips remaining : \n ${userChips}`
+playerBet.appendChild(playerChips);
+userBet.addEventListener('change', function (event) {
+var currentInput = event.target.value;
+inputHappened(currentInput)
+});
+
+var dealButton = document.createElement('button')
+dealButton.className = 'btn';
+dealButton.className = 'btn-primary';
+dealButton.type = 'submit';
+dealButton.id = 'check';
+dealButton.style.display = 'none';
+dealButton.innerText = 'Check';
+var printDeal = document.getElementById('players');
+printDeal.appendChild(dealButton);
+dealButton.addEventListener('click',dealCards)
+
+var foldButton = document.createElement('button')
+foldButton.className = 'btn';
+foldButton.className = 'btn-primary';
+foldButton.type = 'submit';
+foldButton.id = 'fold';
+foldButton.style.display = 'none';
+foldButton.innerText = 'Fold';
+var printDeal = document.getElementById('players');
+printDeal.appendChild(foldButton);
+foldButton.addEventListener('click',fold)
+
+var startGame = document.getElementById('start');
+startGame.addEventListener('click', createDeck);
+var temp = document.getElementById('playerBet')
+var nextHand = document.createElement('button')
+nextHand.className = 'btn';
+nextHand.className = 'btn-primary'
+nextHand.id = 'nextHand';
+nextHand.innerText = 'Next Hand'
+nextHand.addEventListener('click',nextGame)
+nextHand.style.display = 'none';
+temp.appendChild(nextHand)
