@@ -23,15 +23,14 @@ var prizePool = 0;
 var flopPrinted = false;
 var playerHigh;
 
-var inputHappened = function (currentInput){
+var inputHappened = function (currentInput) {
     console.log(currentInput)
     var userInput = parseInt(currentInput);
-    if(isNaN(userInput)){
+    if (isNaN(userInput)) {
         alert('Please enter valid amount!')
-    }
-    else{
-        if(!flopPrinted){
-            if(userInput< userChips){
+    } else {
+        if (!flopPrinted) {
+            if (userInput < userChips) {
                 printFlop();
                 flopPrinted = true;
                 prizePool = prizePool + (betTotal * 2)
@@ -39,29 +38,26 @@ var inputHappened = function (currentInput){
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
                 return userChips;
-            }
-            else{
+            } else {
                 alert('Not enough chips!')
             }
-            
-        }
-        else{
-            if(userInput < userChips){
+
+        } else {
+            if (userInput < userChips) {
                 dealCards();
                 prizePool = prizePool + (betTotal * 2)
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
                 return userChips;
-            }
-            else{
+            } else {
                 alert('Not enough chips!')
             }
         }
     }
 }
 
-var nextGame = function(){
+var nextGame = function () {
     playDeck = [];
     board = [];
     player1 = [];
@@ -96,10 +92,10 @@ var createDeck = function () {
     var foldButton = document.getElementById('fold');
     foldButton.disabled = false;
     foldButton.style.display = 'block';
-    
+
     //diamond suit
     for (i = 0; i < cards.length; i++) {
-        var deckCards =  `${i+1}-D`;
+        var deckCards = `${i+1}-D`;
         playDeck.push(deckCards)
 
     }
@@ -146,9 +142,9 @@ var printCards = function () {
     boardText.style = 'color : white; font-size:50px;';
     player1Text.style = 'color : white; font-size:50px;';
     player2Text.style = 'color : white; font-size:50px;';
-    boardText.innerText= 'Board : '
-    player1Text.innerText= 'Player 1 : '
-    player2Text.innerText= 'Player 2 : '
+    boardText.innerText = 'Board : '
+    player1Text.innerText = 'Player 1 : '
+    player2Text.innerText = 'Player 2 : '
     for (i = 0; i < player1.length; i++) {
         var image = document.createElement('img');
         image.id = `image${i}`
@@ -168,7 +164,7 @@ var printCards = function () {
     }
 }
 
-var printFlop = function(){
+var printFlop = function () {
     while (board.length < 3) {
         var random = (Math.floor(Math.random() * playDeck.length)) - 1;
         var dealtCard = playDeck.splice(random, 1);
@@ -185,11 +181,10 @@ var printFlop = function(){
 }
 
 var dealCards = function () {
-    if(!flopPrinted){
+    if (!flopPrinted) {
         flopPrinted = true;
         printFlop();
-    }
-    else{
+    } else {
         var random = (Math.floor(Math.random() * playDeck.length)) - 1;
         var dealtCard = playDeck.splice(random, 1);
         var image = document.createElement('img');
@@ -199,7 +194,7 @@ var dealCards = function () {
         printBoard.appendChild(image);
         board.push(dealtCard[0]);
         console.log(board + ' ===== board cards')
-        if(board.length === 5){
+        if (board.length === 5) {
             player2Card = document.getElementById('image20')
             player2Card.src = `images/${player2[0]}.png`;
             player2Card2 = document.getElementById('image21')
@@ -214,7 +209,7 @@ var dealCards = function () {
             foldButton.disabled = true;
             betInput = document.getElementById('input')
             betInput.style.display = 'none';
-            setTimeout(checkWin,3000);
+            setTimeout(checkWin, 3000);
         }
     }
 }
@@ -231,39 +226,39 @@ var checkStraight = function () {
     var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
     var sortDuplicate = {};
     var sortedPlayerHand = [];
-    playerHand.sort(function (a, b) {return (a - b)});
+    playerHand.sort(function (a, b) {
+        return (a - b)
+    });
     console.log(playerHand + 'with dupes')
     // to remove duplicates
-    for( i = 0; i < playerHand.length; i++){
-        if(sortDuplicate[playerHand[i]] > 0){
+    for (i = 0; i < playerHand.length; i++) {
+        if (sortDuplicate[playerHand[i]] > 0) {
             sortDuplicate[playerHand[i]]++;
-        }
-        else{
+        } else {
             sortDuplicate[playerHand[i]] = 1;
         }
     }
-    for( j = 1; j < 14; j++){
-        if(parseInt(sortDuplicate[j])){
+    for (j = 1; j < 14; j++) {
+        if (parseInt(sortDuplicate[j])) {
             sortedPlayerHand.push(j);
         }
     }
     console.log(sortedPlayerHand + '==== without dupes')
-    if(sortedPlayerHand.length >= 5){
+    if (sortedPlayerHand.length >= 5) {
         for (k = 0; k < sortedPlayerHand.length; k++) {
             // !!! need to check that straight is 5 consecutive and not split up
             if ((sortedPlayerHand[k] + 1) === sortedPlayerHand[k + 1]) {
                 isStraight++;
                 console.log(isStraight)
-            }
-            else if (isStraight >= 4){
+            } else if (isStraight >= 4) {
                 playerResult = straight + sortedPlayerHand[k]
                 console.log(playerResult)
                 console.log('result straight')
                 return playerResult;
             }
             // reset the count the moment it is not consecutive;
-            else{
-                playerResult=0;
+            else {
+                playerResult = 0;
                 isStraight = 0;
             }
         }
@@ -271,7 +266,7 @@ var checkStraight = function () {
     }
 }
 
-var checkFlush = function(){
+var checkFlush = function () {
     var card1 = player[0].split('-');
     var card2 = player[1].split('-');
     var card3 = board[0].split('-');
@@ -280,25 +275,23 @@ var checkFlush = function(){
     var card6 = board[3].split('-');
     var card7 = board[4].split('-');
     var sortSuits = {};
-    var playerHand = [card1[1],card2[1],card3[1],card4[1],card5[1],card6[1],card7[1]];
+    var playerHand = [card1[1], card2[1], card3[1], card4[1], card5[1], card6[1], card7[1]];
     console.log(playerHand)
-    for( i = 0; i < playerHand.length; i++){
-        if(sortSuits[playerHand[i]] > 0){
+    for (i = 0; i < playerHand.length; i++) {
+        if (sortSuits[playerHand[i]] > 0) {
             sortSuits[playerHand[i]]++;
-        }
-        else{
+        } else {
             sortSuits[playerHand[i]] = 1;
         }
     }
-    for( j = 0; j < suits.length; j++){
-        if(sortSuits[suits[j]] >= 5){
+    for (j = 0; j < suits.length; j++) {
+        if (sortSuits[suits[j]] >= 5) {
             console.log(suits[j])
             console.log(sortSuits[suits[j]])
             playerResult = flush;
             console.log(playerResult)
             return playerResult;
-        }
-        else {
+        } else {
             console.log(suits[j])
             console.log(sortSuits[suits[j]])
             playerResult = 0;
@@ -306,7 +299,7 @@ var checkFlush = function(){
     }
 }
 
-var checkCount = function(){
+var checkCount = function () {
     var card1 = player[0].split('-');
     var card2 = player[1].split('-');
     var card3 = board[0].split('-');
@@ -321,65 +314,61 @@ var checkCount = function(){
     var pairValue = [];
     var tripleValue = [];
     var fourValue;
-    var playerHand = [card1[0],card2[0],card3[0],card4[0],card5[0],card6[0],card7[0]];
-    playerHand.sort(function (a, b) {return (a - b)});
+    var playerHand = [card1[0], card2[0], card3[0], card4[0], card5[0], card6[0], card7[0]];
+    playerHand.sort(function (a, b) {
+        return (a - b)
+    });
     console.log(playerHand)
-    for( i = 0; i < playerHand.length; i++){
-        if(countDuplicates[playerHand[i]] > 0){
+    for (i = 0; i < playerHand.length; i++) {
+        if (countDuplicates[playerHand[i]] > 0) {
             countDuplicates[playerHand[i]]++;
-        }
-        else{
+        } else {
             countDuplicates[playerHand[i]] = 1;
         }
     }
     console.log(countDuplicates)
-    for( j = 0; j < cards.length; j++){
-        if (countDuplicates[cards[j]] == 4){
+    for (j = 0; j < cards.length; j++) {
+        if (countDuplicates[cards[j]] == 4) {
             console.log(cards[j])
             console.log(countDuplicates[cards[j]])
             fourValue = (parseInt(cards[j]))
             fourOfKind++;
-        }
-        else if (countDuplicates[cards[j]] == 3){
+        } else if (countDuplicates[cards[j]] == 3) {
             console.log(cards[j])
             console.log(countDuplicates[cards[j]])
             tripleValue.push(parseInt(cards[j]))
             threeKind++;
-        }
-        else if(countDuplicates[cards[j]] == 2){
+        } else if (countDuplicates[cards[j]] == 2) {
             console.log(cards[j])
             console.log(countDuplicates[cards[j]])
             pairValue.push(parseInt(cards[j]))
             pair++;
         }
     }
-    if(fourOfKind === 1){
+    if (fourOfKind === 1) {
         playerResult = fourKind + fourValue
         console.log(playerResult + '====> user got four of a kind')
-    }
-    else if (threeKind >= 1 && pair >= 1){
+    } else if (threeKind >= 1 && pair >= 1) {
         console.log('User got full house')
-        playerResult = fullHouse + tripleValue[tripleValue.length-1]
+        playerResult = fullHouse + tripleValue[tripleValue.length - 1]
         return console.log(playerResult + '===> player got full house')
-    }
-    else if (threeKind === 1){
+    } else if (threeKind === 1) {
         playerResult = triple + tripleValue[0]
         return console.log(playerResult + '===> player got 1 triple')
-    }
-    else if (pair >= 2){
-        pairValue.sort(function (a, b) {return (a - b)});
-        var highPair = pairValue[pairValue.length-1];
-        var lowPair = pairValue[pairValue.length-2];
-        console.log( highPair + ' =====> high pair ')
-        console.log( lowPair + '====> low pair')
+    } else if (pair >= 2) {
+        pairValue.sort(function (a, b) {
+            return (a - b)
+        });
+        var highPair = pairValue[pairValue.length - 1];
+        var lowPair = pairValue[pairValue.length - 2];
+        console.log(highPair + ' =====> high pair ')
+        console.log(lowPair + '====> low pair')
         playerResult = highPair + twoPair
         return console.log(playerResult + '===> player got 2 pair')
-    }
-    else if (pair == 1){
+    } else if (pair == 1) {
         playerResult = pairValue[0] + onePair
         return console.log(playerResult + '===> player got 1 pair')
-    }
-    else {
+    } else {
         console.log(high + '==== user got high only')
         playerResult = high + parseInt(playerHand[6])
         return console.log(playerResult + '===> player got high caard')
@@ -409,7 +398,7 @@ var checkCount = function(){
     b,c,d,e,f 
     a,b,e,f,g
     */
-var checkStraightFlush = function(){
+var checkStraightFlush = function () {
     var count = 0;
     var card1 = player[0].split('-');
     var card2 = player[1].split('-');
@@ -418,53 +407,48 @@ var checkStraightFlush = function(){
     var card5 = board[2].split('-');
     var card6 = board[3].split('-');
     var card7 = board[4].split('-');
-    var playerHand = [card1,card2,card3,card4,card5,card6,card7];
+    var playerHand = [card1, card2, card3, card4, card5, card6, card7];
     //get all possible 5 card hands
     //loop through playerhand until second last card
-    for(i = 0; i < playerHand.length-1; i++){
+    for (i = 0; i < playerHand.length - 1; i++) {
         //loop through all player cards that are next to first card unti last card
-        for(j = i + 1; j < playerHand.length; j++){
+        for (j = i + 1; j < playerHand.length; j++) {
             var checkHand = [];
             /*first loop ignores cards 1(i) and 2(j)
             second loop ignores cards 1(i) and 3(j)
             goes on until it reaches card 1 and card7
             starts loop again starting with ignoring cards 2 and 3 etc. */
-            for(k = 0; k < playerHand.length; k++){
-                if(k != i && k != j){
+            for (k = 0; k < playerHand.length; k++) {
+                if (k != i && k != j) {
                     checkHand.push(playerHand[k])
                 }
             }
-            if(checkHand.length >= 5){
+            if (checkHand.length >= 5) {
                 //check for flush
-                if(checkHand[0][1]=== checkHand[1][1] && checkHand[0][1]=== checkHand[2][1] && checkHand[0][1]=== checkHand[3][1] && checkHand[0][1]=== checkHand[4][1]){
+                if (checkHand[0][1] === checkHand[1][1] && checkHand[0][1] === checkHand[2][1] && checkHand[0][1] === checkHand[3][1] && checkHand[0][1] === checkHand[4][1]) {
                     //check for straight
-                    for( l = 0; l < checkHand.length-1; l++){
-                        if((parseInt(checkHand[l][0])+1) === parseInt(checkHand[l+1][0])){
-                            highValue = parseInt(checkHand[l+1]);
+                    for (l = 0; l < checkHand.length - 1; l++) {
+                        if ((parseInt(checkHand[l][0]) + 1) === parseInt(checkHand[l + 1][0])) {
+                            highValue = parseInt(checkHand[l + 1]);
                             count++;
                         }
                     }
-                    if(count === 4){
+                    if (count === 4) {
                         console.log('Player got straight flush!')
                         return playerResult = highValue + straightFlush;
-                    }
-                    else{
+                    } else {
                         count = 0;
                         playerResult = 0;
-                    }   
-                }
-                else{
+                    }
+                } else {
                     playerResult = 0;
                 }
-            } 
+            }
         }
     }
 }
-   
- 
 
-// first high card
-var checkTie = function(){
+var checkHigh = function (num) {
     var card1 = player[0].split('-');
     var card2 = player[1].split('-');
     var card3 = board[0].split('-');
@@ -473,77 +457,30 @@ var checkTie = function(){
     var card6 = board[3].split('-');
     var card7 = board[4].split('-');
     var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    playerHand.sort(function (a, b) {return (a - b)});
-    playerHigh = playerHand[6];
-}
-// second high card
-var checkTie2 = function(){
-    var card1 = player[0].split('-');
-    var card2 = player[1].split('-');
-    var card3 = board[0].split('-');
-    var card4 = board[1].split('-');
-    var card5 = board[2].split('-');
-    var card6 = board[3].split('-');
-    var card7 = board[4].split('-');
-    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    playerHand.sort(function (a, b) {return (a - b)});
-    playerHigh = playerHand[5];
-}
-// third high card
-var checkTie3 = function(){
-    var card1 = player[0].split('-');
-    var card2 = player[1].split('-');
-    var card3 = board[0].split('-');
-    var card4 = board[1].split('-');
-    var card5 = board[2].split('-');
-    var card6 = board[3].split('-');
-    var card7 = board[4].split('-');
-    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    playerHand.sort(function (a, b) {return (a - b)});
-    playerHigh = playerHand[4];
-}
-var checkTie4 = function(){
-    var card1 = player[0].split('-');
-    var card2 = player[1].split('-');
-    var card3 = board[0].split('-');
-    var card4 = board[1].split('-');
-    var card5 = board[2].split('-');
-    var card6 = board[3].split('-');
-    var card7 = board[4].split('-');
-    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    playerHand.sort(function (a, b) {return (a - b)});
-    playerHigh = playerHand[3];
-}
-var checkTie5 = function(){
-    var card1 = player[0].split('-');
-    var card2 = player[1].split('-');
-    var card3 = board[0].split('-');
-    var card4 = board[1].split('-');
-    var card5 = board[2].split('-');
-    var card6 = board[3].split('-');
-    var card7 = board[4].split('-');
-    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    playerHand.sort(function (a, b) {return (a - b)});
-    playerHigh = playerHand[2];
+    playerHand.sort(function (a, b) {
+        return (a - b)
+    });
+    playerHigh = playerHand[playerHand.length - num];
+    return playerHigh;
 }
 
-var checkWin = function(){
+var checkWin = function () {
     player = player1;
     checkStraightFlush();
     player1Result = playerResult
-    if(player1Result < 105){
+    if (player1Result < 105) {
         checkCount();
         player1Result = playerResult
-        if(player1Result < 92){
+        if (player1Result < 92) {
             checkCount();
             player1Result = playerResult;
-            if(player1Result <79){
+            if (player1Result < 79) {
                 checkFlush();
                 player1Result = playerResult;
-                if(player1Result < 66){
+                if (player1Result < 66) {
                     checkStraight();
-                    player1Result=playerResult;
-                    if(player1Result<53){
+                    player1Result = playerResult;
+                    if (player1Result < 53) {
                         checkCount();
                         player1Result = playerResult;
                     }
@@ -554,60 +491,50 @@ var checkWin = function(){
     player = player2;
     checkStraightFlush();
     player2Result = playerResult;
-    if(player2Result < 105){
+    if (player2Result < 105) {
         checkCount();
         player2Result = playerResult
-        if(player2Result < 92){
+        if (player2Result < 92) {
             checkCount();
             player2Result = playerResult;
-            if(player2Result <79){
+            if (player2Result < 79) {
                 checkFlush();
                 player2Result = playerResult;
-                if(player2Result < 66){
+                if (player2Result < 66) {
                     checkStraight();
-                    player2Result=playerResult;
-                    if(player2Result<53){
+                    player2Result = playerResult;
+                    if (player2Result < 53) {
                         checkCount();
                         player2Result = playerResult;
-                        if(player2Result === player1Result){
+                        if (player2Result === player1Result) {
                             player = player1
-                            checkTie();
-                            player1Result = playerHigh
+                            player1Result = checkHigh(1);
                             player = player2
-                            checkTie();
-                            player2Result = playerHigh
-                            if(player2Result === player1Result){
+                            player2Result = checkHigh(1);
+                            if (player2Result === player1Result) {
                                 player = player1
-                                checkTie2();
-                                player1Result = playerHigh
+                                player1Result = checkHigh(2);
                                 player = player2
-                                checkTie2();
-                                player2Result = playerHigh
-                                if(player2Result === player1Result){
+                                player2Result = checkHigh(2);
+                                if (player2Result === player1Result) {
                                     player = player1
-                                    checkTie3();
-                                    player1Result = playerHigh
+                                    player1Result = checkHigh(3);
                                     player = player2
-                                    checkTie3();
-                                    player2Result = playerHigh
-                                    if(player2Result === player1Result){
+                                    player2Result = checkHigh(3);
+                                    if (player2Result === player1Result) {
                                         player = player1
-                                        checkTie4();
-                                        player1Result = playerHigh
+                                        player1Result = checkHigh(4)
                                         player = player2
-                                        checkTie4();
-                                        player2Result = playerHigh
-                                        if(player2Result === player1Result){
+                                        player2Result = checkHigh(4)
+                                        if (player2Result === player1Result) {
                                             player = player1
-                                            checkTie5();
-                                            player1Result = playerHigh
+                                            player1Result = checkHigh(5)
                                             player = player2
-                                            checkTie5();
-                                            player2Result = playerHigh
+                                            player2Result = checkHigh(5)
                                         }
                                     }
                                 }
-                                
+
                             }
                         }
                     }
@@ -617,7 +544,7 @@ var checkWin = function(){
     }
     console.log(player1Result)
     console.log(player2Result)
-    if(player1Result > player2Result){
+    if (player1Result > player2Result) {
         userChips += prizePool;
         var userChipsLeft = document.getElementById('chips')
         userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
@@ -625,15 +552,13 @@ var checkWin = function(){
         nextHand.style.display = 'block';
         console.log('Player 1 wins!')
         alert('Player 1 wins!')
-    }
-    else if (player2Result > player1Result){
+    } else if (player2Result > player1Result) {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
         console.log('Player 2 wins!')
         alert('Player 2 wins!')
-    }
-    else{
-        userChips = userChips + (prizePool/2)
+    } else {
+        userChips = userChips + (prizePool / 2)
         var userChipsLeft = document.getElementById('chips')
         userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
         var nextHand = document.getElementById('nextHand')
@@ -643,7 +568,7 @@ var checkWin = function(){
     }
 }
 
-var fold = function(){
+var fold = function () {
     var nextHand = document.getElementById('nextHand')
     nextHand.style.display = 'block';
     dealButton = document.getElementById('check');
@@ -673,8 +598,8 @@ playerChips.style.display = 'none';
 playerChips.innerText = `Total chips remaining : \n ${userChips}`
 playerBet.appendChild(playerChips);
 userBet.addEventListener('change', function (event) {
-var currentInput = event.target.value;
-inputHappened(currentInput)
+    var currentInput = event.target.value;
+    inputHappened(currentInput)
 });
 
 var dealButton = document.createElement('button')
@@ -686,7 +611,7 @@ dealButton.style.display = 'none';
 dealButton.innerText = 'Check';
 var printDeal = document.getElementById('players');
 printDeal.appendChild(dealButton);
-dealButton.addEventListener('click',dealCards)
+dealButton.addEventListener('click', dealCards)
 
 var foldButton = document.createElement('button')
 foldButton.className = 'btn';
@@ -697,7 +622,7 @@ foldButton.style.display = 'none';
 foldButton.innerText = 'Fold';
 var printDeal = document.getElementById('players');
 printDeal.appendChild(foldButton);
-foldButton.addEventListener('click',fold)
+foldButton.addEventListener('click', fold)
 
 var startGame = document.getElementById('start');
 startGame.addEventListener('click', createDeck);
@@ -707,6 +632,6 @@ nextHand.className = 'btn';
 nextHand.className = 'btn-primary'
 nextHand.id = 'nextHand';
 nextHand.innerText = 'Next Hand'
-nextHand.addEventListener('click',nextGame)
+nextHand.addEventListener('click', nextGame)
 nextHand.style.display = 'none';
 temp.appendChild(nextHand)
