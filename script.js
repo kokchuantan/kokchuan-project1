@@ -211,9 +211,9 @@ var dealCards = function () {
             dealButton.style.display = 'none';
             betInput.style.display = 'none';
             foldButton = document.getElementById('fold');
+            foldButton.style.display = 'none';
             foldButton.disabled = true;
             betInput = document.getElementById('input')
-            foldButton.style.display = 'none';
             betInput.style.display = 'none';
             setTimeout(checkWin,3000);
         }
