@@ -37,7 +37,7 @@ var inputHappened = function (currentInput) {
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-                return userChips;
+                return prizePool;
             } else if (userInput === userChips) {
                 printFlop();
                 flopPrinted = true;
@@ -50,7 +50,7 @@ var inputHappened = function (currentInput) {
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-                return userChips;
+                return prizePool;
             } else {
                 alert('Not enough chips!')
             }
@@ -62,7 +62,7 @@ var inputHappened = function (currentInput) {
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-                return userChips;
+                return prizePool;
             } else if (userInput === userChips) {
                 var cardsRemaining = 5 - board.length;
                 for (i = 0; i < cardsRemaining; i++) {
@@ -73,7 +73,7 @@ var inputHappened = function (currentInput) {
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-                return userChips;
+                return prizePool;
             } else {
                 alert('Not enough chips!')
             }
@@ -728,7 +728,7 @@ startGame.addEventListener('click', createDeck);
 var temp = document.getElementById('playerBet')
 var nextHand = document.createElement('button')
 nextHand.className = 'btn';
-nextHand.className = 'btn-outline-primary'
+nextHand.className = 'btn-outline-primary';
 nextHand.id = 'nextHand';
 nextHand.innerText = 'Next Hand'
 nextHand.addEventListener('click', nextGame)
