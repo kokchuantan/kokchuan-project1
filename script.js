@@ -17,11 +17,11 @@ var onePair = 14;
 var high = 1;
 var playerResult, player1Result, player2Result;
 var winner;
-var betTotal = 0;
 var userChips = 100000;
 var prizePool = 0;
 var flopPrinted = false;
 var playerHigh;
+var winCondition = '';
 
 var inputHappened = function (currentInput) {
     console.log(currentInput)
@@ -33,7 +33,20 @@ var inputHappened = function (currentInput) {
             if (userInput < userChips) {
                 printFlop();
                 flopPrinted = true;
-                prizePool = prizePool + (betTotal * 2)
+                prizePool = prizePool + (userInput * 2)
+                userChips -= userInput;
+                var userChipsLeft = document.getElementById('chips')
+                userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+                return userChips;
+            } else if (userInput === userChips) {
+                printFlop();
+                flopPrinted = true;
+                var cardsRemaining = 5 - board.length;
+                for (i = 0; i < cardsRemaining; i++) {
+                    dealCards();
+                }
+                alert('You have gone all in! Good luck!')
+                prizePool = prizePool + (userInput * 2)
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
@@ -45,7 +58,18 @@ var inputHappened = function (currentInput) {
         } else {
             if (userInput < userChips) {
                 dealCards();
-                prizePool = prizePool + (betTotal * 2)
+                prizePool = prizePool + (userInput * 2)
+                userChips -= userInput;
+                var userChipsLeft = document.getElementById('chips')
+                userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+                return userChips;
+            } else if (userInput === userChips) {
+                var cardsRemaining = 5 - board.length;
+                for (i = 0; i < cardsRemaining; i++) {
+                    dealCards();
+                }
+                alert('You have gone all in! Good luck!')
+                prizePool = prizePool + (userInput * 2)
                 userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
@@ -58,39 +82,42 @@ var inputHappened = function (currentInput) {
 }
 
 var nextGame = function () {
-    playDeck = [];
-    board = [];
-    player1 = [];
-    player2 = [];
-    player = [];
-    betTotal = 0;
-    prizePool = 0;
-    flopPrinted = false;
-    var clearBoard = document.getElementById('board')
-    clearBoard.innerText = '';
-    var clearPlayer1 = document.getElementById('player1')
-    clearPlayer1.innerText = '';
-    var clearPlayer2 = document.getElementById('player2')
-    clearPlayer2.innerText = '';
-    var nextHand = document.getElementById('nextHand')
-    nextHand.style.display = 'none';
-    createDeck();
+    if(userChips > 0){
+        playDeck = [];
+        board = [];
+        player1 = [];
+        player2 = [];
+        player = [];
+        prizePool = 0;
+        flopPrinted = false;
+        var clearBoard = document.getElementById('board')
+        clearBoard.innerText = '';
+        var clearPlayer1 = document.getElementById('player1')
+        clearPlayer1.innerText = '';
+        var clearPlayer2 = document.getElementById('player2')
+        clearPlayer2.innerText = '';
+        var nextHand = document.getElementById('nextHand')
+        nextHand.style.display = 'none';
+        createDeck();
+    }
+    else{
+        alert('Sorry you are out of chips!')
+    }
 }
 
 var createDeck = function () {
     header = document.getElementById('body')
     header.style.display = 'none';
     var startGame = document.getElementById('start')
-    startGame.disabled = true
     var userBet = document.getElementById('input')
     userBet.style.display = 'block';
     var playerChips = document.getElementById('chips')
     playerChips.style.display = 'block'
     var dealButton = document.getElementById('check');
-    dealButton.disabled = false;
     dealButton.style.display = 'block';
+    var allInButton = document.getElementById('allIn');
+    allInButton.style.display = 'block';
     var foldButton = document.getElementById('fold');
-    foldButton.disabled = false;
     foldButton.style.display = 'block';
 
     //diamond suit
@@ -200,13 +227,13 @@ var dealCards = function () {
             player2Card2 = document.getElementById('image21')
             player2Card2.src = `images/${player2[1]}.png`;
             dealButton = document.getElementById('check');
-            dealButton.disabled = true;
             betInput = document.getElementById('input')
             dealButton.style.display = 'none';
             betInput.style.display = 'none';
             foldButton = document.getElementById('fold');
             foldButton.style.display = 'none';
-            foldButton.disabled = true;
+            allInButton = document.getElementById('allIn');
+            allInButton.style.display = 'none';
             betInput = document.getElementById('input')
             betInput.style.display = 'none';
             setTimeout(checkWin, 3000);
@@ -254,6 +281,7 @@ var checkStraight = function () {
                 playerResult = straight + sortedPlayerHand[k]
                 console.log(playerResult)
                 console.log('result straight')
+                winCondition = 'Straight'
                 return playerResult;
             }
             // reset the count the moment it is not consecutive;
@@ -290,6 +318,7 @@ var checkFlush = function () {
             console.log(sortSuits[suits[j]])
             playerResult = flush;
             console.log(playerResult)
+            winCondition = 'Flush'
             return playerResult;
         } else {
             console.log(suits[j])
@@ -347,13 +376,16 @@ var checkCount = function () {
     }
     if (fourOfKind === 1) {
         playerResult = fourKind + fourValue
+        winCondition = 'four of a kind'
         console.log(playerResult + '====> user got four of a kind')
     } else if (threeKind >= 1 && pair >= 1) {
         console.log('User got full house')
+        winCondition = 'full house'
         playerResult = fullHouse + tripleValue[tripleValue.length - 1]
         return console.log(playerResult + '===> player got full house')
     } else if (threeKind === 1) {
         playerResult = triple + tripleValue[0]
+        winCondition = 'three of a kind'
         return console.log(playerResult + '===> player got 1 triple')
     } else if (pair >= 2) {
         pairValue.sort(function (a, b) {
@@ -363,14 +395,17 @@ var checkCount = function () {
         var lowPair = pairValue[pairValue.length - 2];
         console.log(highPair + ' =====> high pair ')
         console.log(lowPair + '====> low pair')
+        winCondition = 'two pairs'
         playerResult = highPair + twoPair
         return console.log(playerResult + '===> player got 2 pair')
     } else if (pair == 1) {
         playerResult = pairValue[0] + onePair
+        winCondition = 'pair'
         return console.log(playerResult + '===> player got 1 pair')
     } else {
         console.log(high + '==== user got high only')
         playerResult = high + parseInt(playerHand[6])
+        winCondition = 'a high card'
         return console.log(playerResult + '===> player got high caard')
     }
 }
@@ -500,6 +535,36 @@ var checkWin = function () {
             if (player2Result < 79) {
                 checkFlush();
                 player2Result = playerResult;
+                if (player2Result === player1Result) {
+                    player = player1
+                    player1Result = checkHigh(1);
+                    player = player2
+                    player2Result = checkHigh(1);
+                    if (player2Result === player1Result) {
+                        player = player1
+                        player1Result = checkHigh(2);
+                        player = player2
+                        player2Result = checkHigh(2);
+                        if (player2Result === player1Result) {
+                            player = player1
+                            player1Result = checkHigh(3);
+                            player = player2
+                            player2Result = checkHigh(3);
+                            if (player2Result === player1Result) {
+                                player = player1
+                                player1Result = checkHigh(4)
+                                player = player2
+                                player2Result = checkHigh(4)
+                                if (player2Result === player1Result) {
+                                    player = player1
+                                    player1Result = checkHigh(5)
+                                    player = player2
+                                    player2Result = checkHigh(5)
+                                }
+                            }
+                        }
+                    }
+                }
                 if (player2Result < 66) {
                     checkStraight();
                     player2Result = playerResult;
@@ -534,7 +599,6 @@ var checkWin = function () {
                                         }
                                     }
                                 }
-
                             }
                         }
                     }
@@ -551,12 +615,12 @@ var checkWin = function () {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
         console.log('Player 1 wins!')
-        alert('Player 1 wins!')
+        alert(`Player 1 wins with ${winCondition}!`)
     } else if (player2Result > player1Result) {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
         console.log('Player 2 wins!')
-        alert('Player 2 wins!')
+        alert(`Player 2 wins with ${winCondition}!`)
     } else {
         userChips = userChips + (prizePool / 2)
         var userChipsLeft = document.getElementById('chips')
@@ -572,16 +636,44 @@ var fold = function () {
     var nextHand = document.getElementById('nextHand')
     nextHand.style.display = 'block';
     dealButton = document.getElementById('check');
-    dealButton.disabled = true;
     betInput = document.getElementById('input')
     dealButton.style.display = 'none';
     betInput.style.display = 'none';
     foldButton = document.getElementById('fold');
-    foldButton.disabled = true;
     betInput = document.getElementById('input')
     foldButton.style.display = 'none';
     betInput.style.display = 'none';
+    allInButton = document.getElementById('allIn');
+    allInButton.style.display = 'none';
     alert('Player 2 wins!')
+}
+
+var allIn = function () {
+    if(!flopPrinted){
+        printFlop();
+        flopPrinted = true;
+        while(board.length < 5) {
+            dealCards();
+        }
+        prizePool = userChips * 2 ;
+        userChips -= userChips;
+        alert('You have gone all in! Best of luck!')
+        var userChipsLeft = document.getElementById('chips')
+        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+        return userChips;
+    }
+    else{
+        while(board.length < 5) {
+            dealCards();
+        }
+        prizePool = userChips * 2 ;
+        userChips -= userChips;
+        alert('You have gone all in! Best of luck!')
+        var userChipsLeft = document.getElementById('chips')
+        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+        return userChips;
+    }
+    
 }
 
 var userBet = document.createElement('input')
@@ -623,6 +715,17 @@ foldButton.innerText = 'Fold';
 var printDeal = document.getElementById('players');
 printDeal.appendChild(foldButton);
 foldButton.addEventListener('click', fold)
+
+var allInButton = document.createElement('button')
+allInButton.className = 'btn';
+allInButton.className = 'btn-primary';
+allInButton.type = 'submit';
+allInButton.id = 'allIn';
+allInButton.style.display = 'none';
+allInButton.innerText = 'All In';
+var printDeal = document.getElementById('players');
+printDeal.appendChild(allInButton);
+allInButton.addEventListener('click', allIn)
 
 var startGame = document.getElementById('start');
 startGame.addEventListener('click', createDeck);
