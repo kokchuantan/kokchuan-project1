@@ -82,7 +82,7 @@ var inputHappened = function (currentInput) {
 }
 
 var nextGame = function () {
-    if(userChips > 0){
+    if (userChips > 0) {
         playDeck = [];
         board = [];
         player1 = [];
@@ -99,8 +99,7 @@ var nextGame = function () {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'none';
         createDeck();
-    }
-    else{
+    } else {
         alert('Sorry you are out of chips!')
     }
 }
@@ -662,15 +661,15 @@ var fold = function () {
 }
 
 var allIn = function () {
-        while(board.length < 5) {
-            dealCards();
-        }
-        prizePool = userChips * 2 ;
-        userChips -= userChips;
-        alert('You have gone all in! Best of luck!')
-        var userChipsLeft = document.getElementById('chips')
-        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-        return userChips;
+    while (board.length < 5) {
+        dealCards();
+    }
+    prizePool = userChips * 2;
+    userChips -= userChips;
+    alert('You have gone all in! Best of luck!')
+    var userChipsLeft = document.getElementById('chips')
+    userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
+    return userChips;
 }
 
 var userBet = document.createElement('input')

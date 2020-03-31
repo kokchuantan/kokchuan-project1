@@ -1,0 +1,98 @@
+POKER GAME
+
+1. ARRAY FOR ALL THE CARDS(nested array)  =======> deck =[[suitArray1],[suitArray2],[etc.],[]]
+a. ASSIGN CLASS FOR CARDS
+e.g. suit1 = diamond
+suit2 = clubs
+suit3 = hearts
+suit4 = spade
+array for each suit
+
+for(x =0 ; x< 13;x++){
+    create cards for each suit with id like `d${x}`
+    class = diamond
+    diamond cards will be d1 d2 d3 d4 etc.
+    assign img src = `d${x}.png`
+}
+
+player1 2 cards
+player2 2 cards
+board 5 cards(start with 3 cards; everytime player 2 end turn board++;)
+assign all cards random
+deck[i === random value 0 to 3][j ===== random value less than deck[i].length ]
+when card assigned pop out of array
+deck[i][j].pop
+save card popped out into respective players
+if either player fold ==> other player win; game ends;
+
+
+win conditions??
+straight flush ======> check for flush && straight
+
+full house ====> check for triple && doubles
+
+four of a kind ====> same as triples but count === 4;
+
+flush ======> check board and player cards.class; if class = diamond; diamond++ ; if diamond >= 5(result = flush); 
+
+straight =====> get cardId from card.id; push ids into array; 
+                for loop < idArray.length ; save var y as id.split; save cardvalue as y[1]; push cardvalues into array, 
+                arrange them in ascending order; for(x<value.length){if((value[x] + 1) === value[x+1] straight++)if(straight === 5){result = straight}} 
+
+!!! triples ====> get cardvalue ; 
+            for(x=1 < cardvalue.length x++){if(cardValue[y] === cardvalue[x])count ++; <=== checks value for first card
+            if (count === 3); result === triple }}
+
+doubles ===> same as triple function but count === 2;
+
+top high ====> if above all false; save card value into array and arrange in descending order; compare first value for winner;
+
+
+player has 7 cards
+for each (card[x] === card[y+1])
+
+for (x = 0; x < 7 ;x++){
+    for(y = 0; y < 7;)
+    y = x + 1
+    if(value[x] === value[y])
+    
+}
+
+var cardCount = {}
+for each card, read value and see if it exists in cardcount;
+if it exists; cardcountx++ ; if not, create cardcountx;
+
+var cardCount = {
+  'Ace': 2,
+  'King': 3,
+  '7': 1,
+  '2': 1
+}
+cardCount['Ace']
+seven of spade id ==> S7
+var cardValue = card.id.split('');
+cardValue ===> ['s','7']
+if(cardCount[cardValue[x]] > 0){
+    cardCount[cardValue[x]]++;z
+}
+else{
+    cardCount[cardValue[x]] = 1;
+}
+cardCount= {
+    's' : 1
+    '7' : 1
+}
+
+var lunch = {
+	sandwich: 'ham',
+	snack: 'chips',
+	drink: 'soda',
+	desert: 'cookie',
+	guests: 3,
+	alcohol: false,
+};
+
+for (var key in lunch) {
+	console.log(key); // key
+	console.log(lunch[key]); // value
+}
