@@ -1,16 +1,22 @@
 # Texas Hold’em
 
+
 ## Technologies
 
 HTML, CSS, Javascript, Bootstrap
+
 
 ## Description
 
 A standard Texas Hold'em poker game.
 
+
 ## Gameplay
 
-Player will play against the computer and decides what he wants to do each turn. When the fifth card has been dealt, the game will check for the best hand for each player and declare the winner, distributing the chips accordingly.
+Player will play against the computer and decides what he wants to do each turn.
+When the fifth card has been dealt, the game will check for the best hand for each player and declare the winner, 
+distributing the chips accordingly.
+
 
 ## Building the game
 
@@ -22,14 +28,22 @@ Player will play against the computer and decides what he wants to do each turn.
 6. Putting together the win conditions and ensuring that it works fine.
 7. Add more functionality to the game such as : betting, folding etc.
 
+
 ## MVP
 
-Getting the win condition
-Defining the win conditions
-Identifying exactly what cards have been dealt
-Be able to use a specific set of 5 cards to check against win condition.
-Be able to link all the win conditions together so that they will not clash or overwrite each other.
-Show the player who won through which win condition.
+* Getting the win condition
+* Defining the win conditions
+* Identifying exactly what cards have been dealt
+* Be able to use a specific set of 5 cards to check against win condition.
+* Be able to link all the win conditions together so that they will not clash or overwrite each other.
+* Show the player who won through which win condition.
+
+
+## Further idea
+
+* Add animations when dealing cards
+* Have a smarter AI, who will make more aggresive bets/raise when dealt a good hand
+* Add sounds when dealing card and upon player winning or losing.
 
 
 ## Credits
