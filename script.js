@@ -21,6 +21,7 @@ var betTotal = 0;
 var userChips = 1000000;
 var prizePool = 0;
 var flopPrinted = false;
+var playerHigh;
 
 var inputHappened = function (currentInput){
     console.log(currentInput)
@@ -302,7 +303,7 @@ var checkFlush = function(){
         else {
             console.log(suits[j])
             console.log(sortSuits[suits[j]])
-            return playerResult = 0;
+            playerResult = 0;
         }
     }
 }
@@ -460,10 +461,95 @@ var checkStraightFlush = function(){
     }
     return playerResult;
 }
-    //check for straight first
-    //remove duplicates
-    //if straight true
-    //then check for flush.
+
+/*  a,b,c,d,e,f,g
+    c,d,e,f,g       
+    a,d,e,f,g       
+    a,b,c,f,g
+    a,b,c,d,g
+    a,b,c,d,e
+    b,d,e,f,g
+    a,c,e,f,g
+    a,b,d,f,g
+    a,b,c,e,g
+    a,b,c,d,f
+    b,c,e,f,g
+    a,c,d,f,g
+    a,b,d,e,g
+    a,b,c,e,f
+    b,c,d,f,g
+    a,c,d,e,g
+    a,b,d,e,f
+    b,c,d,e,g
+    a,c,d,e,f
+    b,c,d,e,f 
+    a,b,e,f,g
+    */
+ 
+
+// first high card
+var checkTie = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    playerHand.sort(function (a, b) {return (a - b)});
+    playerHigh = playerHand[6];
+}
+// second high card
+var checkTie2 = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    playerHand.sort(function (a, b) {return (a - b)});
+    playerHigh = playerHand[5];
+}
+// third high card
+var checkTie3 = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    playerHand.sort(function (a, b) {return (a - b)});
+    playerHigh = playerHand[4];
+}
+var checkTie4 = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    playerHand.sort(function (a, b) {return (a - b)});
+    playerHigh = playerHand[3];
+}
+var checkTie5 = function(){
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
+    playerHand.sort(function (a, b) {return (a - b)});
+    playerHigh = playerHand[2];
+}
 
 var checkWin = function(){
     player = player1;
@@ -507,22 +593,67 @@ var checkWin = function(){
                     if(player2Result<53){
                         checkCount();
                         player2Result = playerResult;
+                        if(player2Result === player1Result){
+                            player = player1
+                            checkTie();
+                            player1Result = playerHigh
+                            player = player2
+                            checkTie();
+                            player2Result = playerHigh
+                            if(player2Result === player1Result){
+                                player = player1
+                                checkTie2();
+                                player1Result = playerHigh
+                                player = player2
+                                checkTie2();
+                                player2Result = playerHigh
+                                if(player2Result === player1Result){
+                                    player = player1
+                                    checkTie3();
+                                    player1Result = playerHigh
+                                    player = player2
+                                    checkTie3();
+                                    player2Result = playerHigh
+                                    if(player2Result === player1Result){
+                                        player = player1
+                                        checkTie4();
+                                        player1Result = playerHigh
+                                        player = player2
+                                        checkTie4();
+                                        player2Result = playerHigh
+                                        if(player2Result === player1Result){
+                                            player = player1
+                                            checkTie5();
+                                            player1Result = playerHigh
+                                            player = player2
+                                            checkTie5();
+                                            player2Result = playerHigh
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
                     }
                 }
             }
         }
     }
+    console.log(player1Result)
+    console.log(player2Result)
     if(player1Result > player2Result){
         userChips += prizePool;
         var userChipsLeft = document.getElementById('chips')
         userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
+        console.log('Player 1 wins!')
         alert('Player 1 wins!')
     }
     else if (player2Result > player1Result){
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
+        console.log('Player 2 wins!')
         alert('Player 2 wins!')
     }
     else{
@@ -531,6 +662,7 @@ var checkWin = function(){
         userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
+        console.log('Its a tie!')
         alert('Its a tie!')
     }
 }
