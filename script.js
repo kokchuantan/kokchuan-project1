@@ -664,7 +664,7 @@ var allIn = function () {
     while (board.length < 5) {
         dealCards();
     }
-    prizePool = userChips * 2;
+    prizePool += (userChips * 2);
     userChips -= userChips;
     alert('You have gone all in! Best of luck!')
     var userChipsLeft = document.getElementById('chips')
@@ -692,7 +692,7 @@ userBet.addEventListener('change', function (event) {
 
 var dealButton = document.createElement('button')
 dealButton.className = 'btn';
-dealButton.className = 'btn-primary';
+dealButton.className = 'btn-outline-primary';
 dealButton.type = 'submit';
 dealButton.id = 'check';
 dealButton.style.display = 'none';
@@ -703,7 +703,7 @@ dealButton.addEventListener('click', dealCards)
 
 var allInButton = document.createElement('button')
 allInButton.className = 'btn';
-allInButton.className = 'btn-warning';
+allInButton.className = 'btn-outline-warning';
 allInButton.type = 'submit';
 allInButton.id = 'allIn';
 allInButton.style.display = 'none';
@@ -714,7 +714,7 @@ allInButton.addEventListener('click', allIn)
 
 var foldButton = document.createElement('button')
 foldButton.className = 'btn';
-foldButton.className = 'btn-danger';
+foldButton.className = 'btn-outline-danger';
 foldButton.type = 'submit';
 foldButton.id = 'fold';
 foldButton.style.display = 'none';
@@ -728,7 +728,7 @@ startGame.addEventListener('click', createDeck);
 var temp = document.getElementById('playerBet')
 var nextHand = document.createElement('button')
 nextHand.className = 'btn';
-nextHand.className = 'btn-primary'
+nextHand.className = 'btn-outline-primary'
 nextHand.id = 'nextHand';
 nextHand.innerText = 'Next Hand'
 nextHand.addEventListener('click', nextGame)
