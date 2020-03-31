@@ -18,7 +18,7 @@ var high = 1;
 var playerResult, player1Result, player2Result;
 var winner;
 var betTotal = 0;
-var userChips = 1000000;
+var userChips = 100000;
 var prizePool = 0;
 var flopPrinted = false;
 var playerHigh;
@@ -32,11 +32,10 @@ var inputHappened = function (currentInput){
     else{
         if(!flopPrinted){
             if(userInput< userChips){
-                betTotal += userInput;
                 printFlop();
                 flopPrinted = true;
                 prizePool = prizePool + (betTotal * 2)
-                userChips -= betTotal;
+                userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
                 return userChips;
@@ -48,10 +47,9 @@ var inputHappened = function (currentInput){
         }
         else{
             if(userInput < userChips){
-                betTotal += userInput;
                 dealCards();
                 prizePool = prizePool + (betTotal * 2)
-                userChips -= betTotal;
+                userChips -= userInput;
                 var userChipsLeft = document.getElementById('chips')
                 userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
                 return userChips;
