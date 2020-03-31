@@ -21,7 +21,7 @@ var userChips = 100000;
 var prizePool = 0;
 var flopPrinted = false;
 var playerHigh;
-var winCondition = '';
+var winCondition = winCondition1 = winCondition2 = '';
 
 var inputHappened = function (currentInput) {
     console.log(currentInput)
@@ -400,7 +400,7 @@ var checkCount = function () {
         return console.log(playerResult + '===> player got 2 pair')
     } else if (pair == 1) {
         playerResult = pairValue[0] + onePair
-        winCondition = 'pair'
+        winCondition = 'a pair'
         return console.log(playerResult + '===> player got 1 pair')
     } else {
         console.log(high + '==== user got high only')
@@ -495,6 +495,7 @@ var checkHigh = function (num) {
     playerHand.sort(function (a, b) {
         return (a - b)
     });
+    winCondition = 'a high card '
     playerHigh = playerHand[playerHand.length - num];
     return playerHigh;
 }
@@ -502,21 +503,27 @@ var checkHigh = function (num) {
 var checkWin = function () {
     player = player1;
     checkStraightFlush();
+    winCondition1 = winCondition;
     player1Result = playerResult
     if (player1Result < 105) {
         checkCount();
+        winCondition1 = winCondition;
         player1Result = playerResult
         if (player1Result < 92) {
             checkCount();
+            winCondition1 = winCondition;
             player1Result = playerResult;
             if (player1Result < 79) {
                 checkFlush();
+                winCondition1 = winCondition;
                 player1Result = playerResult;
                 if (player1Result < 66) {
                     checkStraight();
+                    winCondition1 = winCondition;
                     player1Result = playerResult;
                     if (player1Result < 53) {
                         checkCount();
+                        winCondition1 = winCondition;
                         player1Result = playerResult;
                     }
                 }
@@ -525,15 +532,19 @@ var checkWin = function () {
     }
     player = player2;
     checkStraightFlush();
+    winCondition2 = winCondition;
     player2Result = playerResult;
     if (player2Result < 105) {
         checkCount();
+        winCondition2 = winCondition;
         player2Result = playerResult
         if (player2Result < 92) {
             checkCount();
+            winCondition2 = winCondition;
             player2Result = playerResult;
             if (player2Result < 79) {
                 checkFlush();
+                winCondition2 = winCondition;
                 player2Result = playerResult;
                 if (player2Result === player1Result) {
                     player = player1
@@ -567,9 +578,11 @@ var checkWin = function () {
                 }
                 if (player2Result < 66) {
                     checkStraight();
+                    winCondition2 = winCondition;
                     player2Result = playerResult;
                     if (player2Result < 53) {
                         checkCount();
+                        winCondition2 = winCondition;
                         player2Result = playerResult;
                         if (player2Result === player1Result) {
                             player = player1
@@ -615,12 +628,12 @@ var checkWin = function () {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
         console.log('Player 1 wins!')
-        alert(`Player 1 wins with ${winCondition}!`)
+        alert(`Player 1 wins with ${winCondition1}!`)
     } else if (player2Result > player1Result) {
         var nextHand = document.getElementById('nextHand')
         nextHand.style.display = 'block';
         console.log('Player 2 wins!')
-        alert(`Player 2 wins with ${winCondition}!`)
+        alert(`Player 2 wins with ${winCondition2}!`)
     } else {
         userChips = userChips + (prizePool / 2)
         var userChipsLeft = document.getElementById('chips')
@@ -649,9 +662,6 @@ var fold = function () {
 }
 
 var allIn = function () {
-    if(!flopPrinted){
-        printFlop();
-        flopPrinted = true;
         while(board.length < 5) {
             dealCards();
         }
@@ -661,19 +671,6 @@ var allIn = function () {
         var userChipsLeft = document.getElementById('chips')
         userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
         return userChips;
-    }
-    else{
-        while(board.length < 5) {
-            dealCards();
-        }
-        prizePool = userChips * 2 ;
-        userChips -= userChips;
-        alert('You have gone all in! Best of luck!')
-        var userChipsLeft = document.getElementById('chips')
-        userChipsLeft.innerText = `Total chips remaining : \n ${userChips}`
-        return userChips;
-    }
-    
 }
 
 var userBet = document.createElement('input')
