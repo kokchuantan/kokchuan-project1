@@ -701,20 +701,9 @@ var printDeal = document.getElementById('players');
 printDeal.appendChild(dealButton);
 dealButton.addEventListener('click', dealCards)
 
-var foldButton = document.createElement('button')
-foldButton.className = 'btn';
-foldButton.className = 'btn-primary';
-foldButton.type = 'submit';
-foldButton.id = 'fold';
-foldButton.style.display = 'none';
-foldButton.innerText = 'Fold';
-var printDeal = document.getElementById('players');
-printDeal.appendChild(foldButton);
-foldButton.addEventListener('click', fold)
-
 var allInButton = document.createElement('button')
 allInButton.className = 'btn';
-allInButton.className = 'btn-primary';
+allInButton.className = 'btn-warning';
 allInButton.type = 'submit';
 allInButton.id = 'allIn';
 allInButton.style.display = 'none';
@@ -722,6 +711,17 @@ allInButton.innerText = 'All In';
 var printDeal = document.getElementById('players');
 printDeal.appendChild(allInButton);
 allInButton.addEventListener('click', allIn)
+
+var foldButton = document.createElement('button')
+foldButton.className = 'btn';
+foldButton.className = 'btn-danger';
+foldButton.type = 'submit';
+foldButton.id = 'fold';
+foldButton.style.display = 'none';
+foldButton.innerText = 'Fold';
+var printDeal = document.getElementById('players');
+printDeal.appendChild(foldButton);
+foldButton.addEventListener('click', fold)
 
 var startGame = document.getElementById('start');
 startGame.addEventListener('click', createDeck);
