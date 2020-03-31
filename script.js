@@ -248,7 +248,7 @@ var checkStraight = function () {
         }
     }
     console.log(sortedPlayerHand + '==== without dupes')
-    if(sortedPlayerHand >= 5){
+    if(sortedPlayerHand.length >= 5){
         for (k = 0; k < sortedPlayerHand.length; k++) {
             // !!! need to check that straight is 5 consecutive and not split up
             if ((sortedPlayerHand[k] + 1) === sortedPlayerHand[k + 1]) {
@@ -266,8 +266,8 @@ var checkStraight = function () {
                 playerResult=0;
                 isStraight = 0;
             }
-            return playerResult;
         }
+        return playerResult;
     }
 }
 
@@ -385,81 +385,7 @@ var checkCount = function(){
         return console.log(playerResult + '===> player got high caard')
     }
 }
-
-var checkStraightFlush = function(){
-    var card1 = player[0].split('-');
-    var card2 = player[1].split('-');
-    var card3 = board[0].split('-');
-    var card4 = board[1].split('-');
-    var card5 = board[2].split('-');
-    var card6 = board[3].split('-');
-    var card7 = board[4].split('-');
-    var playerHand = [parseInt(card1[0]), parseInt(card2[0]), parseInt(card3[0]), parseInt(card4[0]), parseInt(card5[0]), parseInt(card6[0]), parseInt(card7[0])];
-    var sortDuplicate = {};
-    var sortedPlayerHand = [];
-    var highcard;
-    var isStraight=0;
-    playerHand.sort(function (a, b) {return (a - b)});
-    console.log(playerHand + 'with dupes')
-    // to remove duplicates
-    for( i = 0; i < playerHand.length; i++){
-        if(sortDuplicate[playerHand[i]] > 0){
-            sortDuplicate[playerHand[i]]++;
-        }
-        else{
-            sortDuplicate[playerHand[i]] = 1;
-        }
-    }
-    for( j = 1; j < 14; j++){
-        if(parseInt(sortDuplicate[j])){
-            sortedPlayerHand.push(j);
-        }
-    }
-    console.log(sortedPlayerHand + '==== without dupes')
-    for (k = 0; k < sortedPlayerHand.length; k++) {
-        if ((sortedPlayerHand[k] + 1) === sortedPlayerHand[k + 1]) {
-            highcard = sortedPlayerHand[k+1]
-            isStraight++;
-            console.log(isStraight)
-        }
-        else if (isStraight >= 4){
-            playerResult = straight + highcard
-            console.log(playerResult)
-            console.log('result straight')
-        }
-        else{
-            playerResult =0;
-            isStraight = 0;
-        }
-    }
-    if(playerResult >=53){
-        var sortSuits = {};
-        var playerHand = [card1[1],card2[1],card3[1],card4[1],card5[1],card6[1],card7[1]];
-        console.log(playerHand)
-        for( i = 0; i < playerHand.length; i++){
-            if(sortSuits[playerHand[i]] > 0){
-                sortSuits[playerHand[i]]++;
-            }
-            else{
-                sortSuits[playerHand[i]] = 1;
-            }
-        }
-        for( j = 0; j < suits.length; j++){
-            if(sortSuits[suits[j]] >= 5){
-                console.log(suits[j])
-                console.log(sortSuits[suits[j]])
-                playerResult = flush;
-                console.log(playerResult)
-            }
-        }
-        if(playerResult == flush){
-            playerResult = straightFlush + highcard;
-            console.log(playerResult)
-        }
-    }
-    return playerResult;
-}
-
+// all possible 5 cards combinations from 7 cards
 /*  a,b,c,d,e,f,g
     c,d,e,f,g       
     a,d,e,f,g       
@@ -483,6 +409,58 @@ var checkStraightFlush = function(){
     b,c,d,e,f 
     a,b,e,f,g
     */
+var checkStraightFlush = function(){
+    var count = 0;
+    var card1 = player[0].split('-');
+    var card2 = player[1].split('-');
+    var card3 = board[0].split('-');
+    var card4 = board[1].split('-');
+    var card5 = board[2].split('-');
+    var card6 = board[3].split('-');
+    var card7 = board[4].split('-');
+    var playerHand = [card1,card2,card3,card4,card5,card6,card7];
+    //get all possible 5 card hands
+    //loop through playerhand until second last card
+    for(i = 0; i < playerHand.length-1; i++){
+        //loop through all player cards that are next to first card unti last card
+        for(j = i + 1; j < playerHand.length; j++){
+            var checkHand = [];
+            /*first loop ignores cards 1(i) and 2(j)
+            second loop ignores cards 1(i) and 3(j)
+            goes on until it reaches card 1 and card7
+            starts loop again starting with ignoring cards 2 and 3 etc. */
+            for(k = 0; k < playerHand.length; k++){
+                if(k != i && k != j){
+                    checkHand.push(playerHand[k])
+                }
+            }
+            if(checkHand.length >= 5){
+                //check for flush
+                if(checkHand[0][1]=== checkHand[1][1] && checkHand[0][1]=== checkHand[2][1] && checkHand[0][1]=== checkHand[3][1] && checkHand[0][1]=== checkHand[4][1]){
+                    //check for straight
+                    for( l = 0; l < checkHand.length-1; l++){
+                        if((parseInt(checkHand[l][0])+1) === parseInt(checkHand[l+1][0])){
+                            highValue = parseInt(checkHand[l+1]);
+                            count++;
+                        }
+                    }
+                    if(count === 4){
+                        console.log('Player got straight flush!')
+                        return playerResult = highValue + straightFlush;
+                    }
+                    else{
+                        count = 0;
+                        playerResult = 0;
+                    }   
+                }
+                else{
+                    playerResult = 0;
+                }
+            } 
+        }
+    }
+}
+   
  
 
 // first high card
